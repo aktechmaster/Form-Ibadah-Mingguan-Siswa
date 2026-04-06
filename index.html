@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Ibadah Mingguan Siswa SMP IT Al-Kautsar</title>
+    <link rel="icon" href="logosmpit.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0ebf8; /* Background ungu khas form */
+            margin: 0;
+            padding: 20px 10px;
+            color: #202124;
+        }
+        .container {
+            max-width: 640px;
+            margin: 0 auto;
+        }
+        /* Header Card */
+        .header-card {
+            background: white;
+            border-top: 10px solid #673ab7; /* Garis ungu atas */
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+        .header-card img {
+            max-width: 100px;
+            margin-bottom: 15px;
+        }
+        .header-card h1 {
+            font-size: 24px;
+            margin: 0 0 5px 0;
+            font-weight: 400;
+        }
+        .header-card p {
+            color: #5f6368;
+            font-size: 14px;
+            margin: 0;
+        }
+        /* Question Card */
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+        }
+        .card-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+        .required { color: #d93025; }
+        
+        /* Select Input */
+        select, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-bottom: 1px solid #dadce0;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            background: transparent;
+        }
+        select:focus, input[type="text"]:focus {
+            border-bottom: 2px solid #673ab7;
+        }
+
+        /* Radio Grid Table ala Google Form */
+        .grid-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .grid-table th, .grid-table td {
+            padding: 12px 5px;
+            text-align: center;
+        }
+        .grid-table td.row-label {
+            text-align: left;
+            width: 30%;
+            font-size: 14px;
+        }
+        .grid-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        /* Radio Bullets */
+        .radio-option {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        /* Submit Button */
+        .btn-submit {
+            background-color: #673ab7;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-submit:hover {
+            background-color: #5e35b1;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 30px;
+        }
+        .footer span { font-weight: bold; color: #673ab7; }
+
+        /* Lock Screen */
+        #lock-screen {
+            display: none;
+            text-align: center;
+            background: white;
+            padding: 40px 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+            margin-top: 50px;
+        }
+        #main-form { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <div id="lock-screen">
+        <h2 style="color: #d93025;">Akses Ditutup</h2>
+        <p>Mohon maaf, pengisian Form Ibadah Mingguan hanya dapat dilakukan pada akhir pekan (Hari Ahad).<br>Silakan kembali lagi di hari Ahad.</p>
+    </div>
+
+    <form id="main-form">
+        <div class="header-card">
+            <img src="logosmpit.png" alt="Logo SMP IT">
+            <h1>Form Ibadah Mingguan Siswa<br>SMP IT Al-Kautsar</h1>
+            <p>Smart Input System v2.0</p>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Identitas Siswa <span class="required">*</span></div>
+            <select id="kelas" required style="margin-bottom: 20px;">
+                <option value="" disabled selected>-- Pilih Kelas --</option>
+            </select>
+            
+            <select id="nama" required disabled>
+                <option value="" disabled selected>-- Pilih Nama Siswa --</option>
+            </select>
+        </div>
+
+        <div class="card">
+            <div class="card-title">SHALAT WAJIB PER PEKAN <span class="required">*</span><br><small style="color: #5f6368; font-weight: normal;">hitungan (Kali)</small></div>
+            <div style="overflow-x: auto;">
+                <table class="grid-table" id="table-wajib">
+                    <thead>
+                        <tr>
+                            <th></th><th>7</th><th>6</th><th>5</th><th>4</th><th>3</th><th>2</th><th>1</th><th>0</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">SEBAGIAN BESAR SHALAT WAJIB DILAKUKAN DI <span class="required">*</span></div>
+            <label class="radio-option"><input type="radio" name="tempat" value="MASJID" required> 1. MASJID</label>
+            <label class="radio-option"><input type="radio" name="tempat" value="RUMAH" required> 2. RUMAH</label>
+        </div>
+
+        <div class="card">
+            <div class="card-title">KETERANGAN (KHUSUS BANAT)</div>
+            <p style="font-size: 13px; color: #5f6368;">Isi bagian ini dengan <b>jumlah berapa hari</b> ananda berhalangan/Haid dalam 1 Minggu. Lewati jika tidak perlu.</p>
+            <input type="text" id="banat" placeholder="Teks jawaban singkat">
+        </div>
+
+        <div class="card">
+            <div class="card-title">SHALAT SUNNAH PER PEKAN <span class="required">*</span></div>
+            <div style="overflow-x: auto;">
+                <table class="grid-table" id="table-sunnah">
+                    <thead><tr><th></th><th>7</th><th>6</th><th>5</th><th>4</th><th>3</th><th>2</th><th>1</th><th>0</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">TILAWAH DAN HAFALAN AL-QUR'AN PER PEKAN <span class="required">*</span><br><small style="color: #5f6368; font-weight: normal;">(Hitungan lembar)</small></div>
+            <div style="overflow-x: auto;">
+                <table class="grid-table" id="table-quran">
+                    <thead><tr><th></th><th>7</th><th>6</th><th>5</th><th>4</th><th>3</th><th>2</th><th>1</th><th>0</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">PUASA SUNNAH PER PEKAN <span class="required">*</span><br><small style="color: #5f6368; font-weight: normal;">hitungan (Kali)</small></div>
+            <div style="overflow-x: auto;">
+                <table class="grid-table" id="table-puasa">
+                    <thead><tr><th></th><th>4</th><th>3</th><th>2</th><th>1</th><th>0</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">OLAHRAGA PER PEKAN <span class="required">*</span></div>
+            <div style="overflow-x: auto;">
+                <table class="grid-table" id="table-olahraga">
+                    <thead><tr><th></th><th>7</th><th>6</th><th>5</th><th>4</th><th>3</th><th>2</th><th>1</th><th>0</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">MEMBANTU ORANG TUA PER PEKAN <span class="required">*</span><br>
+                <small style="color: #5f6368; font-weight: normal;">3 = Selalu, 2 = Sering, 1 = Jarang, 0 = Tidak pernah</small>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="grid-table" id="table-ortu">
+                    <thead><tr><th></th><th>3</th><th>2</th><th>1</th><th>0</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">PERSAKSIAN <span class="required">*</span></div>
+            <label style="display: flex; align-items: start; font-size: 14px; cursor: pointer;">
+                <input type="checkbox" id="persaksian" required style="margin-right: 10px; margin-top: 3px;">
+                Demi Allah, saya bersaksi bahwa data ibadah yang saya input ini adalah benar sesuai dengan kondisi ananda sebenarnya.
+            </label>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <button type="submit" class="btn-submit" id="btn-submit">Kirim</button>
+            <div class="footer" style="margin-top:0;">
+                &copy; 2026 <span>aktechmaster</span> <br>Designed & Developed by aktechmaster
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script>
+    // --- GANTI STRING INI DENGAN URL WEB APP DARI GOOGLE APPS SCRIPT ---
+    const API_URL = "https://script.google.com/macros/s/AKfycbz78M9s2I6dHtVSTgkCxZoDgdhYoD3c89SfWDTsD1hHnDB-7yxnEwEPJ0DasCOWJxgf/exec";
+
+    let dbSiswa = [];
+
+    // Fungsi Render Grid Table (Agar HTML rapi)
+    function renderGrid(tableId, rows, maxVal, namePrefix) {
+        const tbody = document.querySelector(`#${tableId} tbody`);
+        rows.forEach(row => {
+            let tr = `<tr><td class="row-label">${row}</td>`;
+            for (let i = maxVal; i >= 0; i--) {
+                tr += `<td><input type="radio" name="${namePrefix}_${row.replace(/[^a-zA-Z]/g, '').toLowerCase()}" value="${i}" required></td>`;
+            }
+            tr += `</tr>`;
+            tbody.innerHTML += tr;
+        });
+    }
+
+    // Eksekusi Logika Awal Saat Web Dibuka
+    document.addEventListener("DOMContentLoaded", () => {
+        const today = new Date().getDay(); // 0 = Ahad
+        
+        // 1. FITUR KUNCI HARI (Hanya buka hari Ahad = 0)
+        // Jika ingin uji coba hari lain, ubah '!== 0' menjadi '!== 10' sementara.
+        if (today !== 0) {
+            document.getElementById('lock-screen').style.display = 'block';
+            return; // Hentikan script, form tidak dimunculkan
+        }
+
+        // Buka form jika hari Ahad
+        document.getElementById('main-form').style.display = 'block';
+
+        // 2. Render Tabel Opsi Pilihan
+        renderGrid('table-wajib', ['SHUBUH', 'DZUHUR', 'ASHAR', 'MAGHRIB', 'ISYA'], 7, 'wajib');
+        renderGrid('table-sunnah', ['SHALAT DHUHA', 'TAHAJUD'], 7, 'sunnah');
+        renderGrid('table-quran', ['TILAWAH AL QURAN', 'MENGHAFAL MUROJAAH'], 7, 'quran');
+        renderGrid('table-puasa', ['PUASA SUNNAH'], 4, 'puasa');
+        renderGrid('table-olahraga', ['OLAHRAGA'], 7, 'olahraga');
+        renderGrid('table-ortu', ['MENYAPU', 'MENCUCI', 'MENYETRIKA', 'MELIPAT PAKAIAN', 'MEMASAK', 'JEMUR PAKAIAN'], 3, 'ortu');
+
+        // 3. Ambil Database dari Google Sheets
+        fetch(API_URL)
+            .then(res => res.json())
+            .then(data => {
+                dbSiswa = data;
+                // Ekstrak list Kelas yang unik
+                let listKelas = [...new Set(data.map(item => item.kelas))].sort();
+                const selKelas = document.getElementById('kelas');
+                listKelas.forEach(k => {
+                    if(k) selKelas.innerHTML += `<option value="${k}">${k}</option>`;
+                });
+            });
+    });
+
+    // 4. Logika Dropdown Bertingkat (Pilih Kelas -> Muncul Nama)
+    document.getElementById('kelas').addEventListener('change', function() {
+        const selNama = document.getElementById('nama');
+        selNama.innerHTML = `<option value="" disabled selected>-- Pilih Nama Siswa --</option>`;
+        selNama.disabled = false;
+
+        const filteredSiswa = dbSiswa.filter(s => s.kelas === this.value);
+        filteredSiswa.forEach(s => {
+            selNama.innerHTML += `<option value="${s.nama}">${s.nama}</option>`;
+        });
+    });
+
+    // 5. Proses Pengiriman Form
+    document.getElementById('main-form').addEventListener('submit', function(e) {
+        e.preventDefault(); // Cegah reload halaman
+
+        const btn = document.getElementById('btn-submit');
+        btn.innerHTML = 'Mengirim...';
+        btn.disabled = true;
+
+        // Kumpulkan Data (Mencocokkan name di atribut HTML ke properti objek API)
+        const payload = {
+            kelas: document.getElementById('kelas').value,
+            nama: document.getElementById('nama').value,
+            shubuh: document.querySelector('input[name="wajib_shubuh"]:checked').value,
+            dzuhur: document.querySelector('input[name="wajib_dzuhur"]:checked').value,
+            ashar: document.querySelector('input[name="wajib_ashar"]:checked').value,
+            maghrib: document.querySelector('input[name="wajib_maghrib"]:checked').value,
+            isya: document.querySelector('input[name="wajib_isya"]:checked').value,
+            tempat: document.querySelector('input[name="tempat"]:checked').value,
+            banat: document.getElementById('banat').value,
+            dhuha: document.querySelector('input[name="sunnah_shalatdhuha"]:checked').value,
+            tahajud: document.querySelector('input[name="sunnah_tahajud"]:checked').value,
+            tilawah: document.querySelector('input[name="quran_tilawahalquran"]:checked').value,
+            hafalan: document.querySelector('input[name="quran_menghafalmurojaah"]:checked').value,
+            puasa: document.querySelector('input[name="puasa_puasasunnah"]:checked').value,
+            olahraga: document.querySelector('input[name="olahraga_olahraga"]:checked').value,
+            menyapu: document.querySelector('input[name="ortu_menyapu"]:checked').value,
+            mencuci: document.querySelector('input[name="ortu_mencuci"]:checked').value,
+            menyetrika: document.querySelector('input[name="ortu_menyetrika"]:checked').value,
+            melipat: document.querySelector('input[name="ortu_melipatpakaian"]:checked').value,
+            memasak: document.querySelector('input[name="ortu_memasak"]:checked').value,
+            jemur: document.querySelector('input[name="ortu_jemurpakaian"]:checked').value
+        };
+
+        // Kirim ke Google Apps Script
+        fetch(API_URL, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(response => {
+            // Popup Sukses Keren menggunakan SweetAlert2
+            Swal.fire({
+                title: 'Berhasil!',
+                text: 'Alhamdulillah data ibadah siswa sudah tersimpan',
+                icon: 'success',
+                confirmButtonColor: '#673ab7',
+                confirmButtonText: 'Tutup'
+            }).then(() => {
+                // Reset form setelah sukses
+                document.getElementById('main-form').reset();
+                document.getElementById('nama').disabled = true;
+                btn.innerHTML = 'Kirim';
+                btn.disabled = false;
+            });
+        })
+        .catch(error => {
+            Swal.fire('Error', 'Terjadi kesalahan saat mengirim data.', 'error');
+            btn.innerHTML = 'Kirim';
+            btn.disabled = false;
+        });
+    });
+</script>
+
+</body>
+</html>
